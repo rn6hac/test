@@ -3,18 +3,19 @@ Implement a GUI for viewing and updating class instances stored in a shelve;
 the shelve lives on the machine this script runs on, as 1 or more local files;
 """
 
-import shelve
 import tkinter
 from tkinter import ttk
 from tkinter.messagebox import showerror, showinfo
 
-from const import SHELVE_NAME
+import const
 
 DB = None
+
 ENTRIES = {}
 
 SEARCH_FIELD = 'SEARCH PERSON'
 FIELD_NAMES = ('name', 'age', 'job', 'pay')
+
 
 def get_selected_person_full_name() -> str:
     full_name = ENTRIES[SEARCH_FIELD].get()
@@ -69,16 +70,15 @@ def update_record() -> None:
     for field in FIELD_NAMES:
         record = DB[full_name]
         setattr(record, field, ENTRIES[field].get())
-        DB[full_name] = record
 
     showinfo('Updated', f'{full_name} person info updated')
 
 
 if __name__ == '__main__':
-    try:
-        DB = shelve.open(SHELVE_NAME)
-        window = make_widgets()
-        window.mainloop()
-    finally:
-        if DB:
-            DB.close()
+    DB = {
+        const.BOB.name: const.BOB,
+        const.TOM.name: const.TOM,
+        const.SUE.name: const.SUE,
+    }
+    window = make_widgets()
+    window.mainloop()
